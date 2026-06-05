@@ -38,10 +38,31 @@
   .strikethrough { text-decoration: line-through; color: #bbb; font-size: 11px; margin-right: 4px; }
   .back { display: inline-block; font-size: 13px; color: #888; text-decoration: none; margin-bottom: 18px; }
   .back:hover { color: #444; }
+  #pin-overlay { position: fixed; inset: 0; background: #f5f5f3; display: flex; align-items: center; justify-content: center; z-index: 999; }
+  #pin-box { background: #fff; border: 1px solid #e8e8e4; border-radius: 14px; padding: 32px 28px; text-align: center; max-width: 300px; width: 100%; }
+  #pin-box h2 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  #pin-box p { font-size: 13px; color: #888; margin-bottom: 20px; }
+  #pin-input { width: 100%; padding: 10px 14px; font-size: 22px; text-align: center; letter-spacing: .2em; border: 1px solid #e8e8e4; border-radius: 8px; outline: none; margin-bottom: 12px; }
+  #pin-input:focus { border-color: #aaa; }
+  #pin-error { font-size: 12px; color: #c0392b; min-height: 18px; margin-bottom: 4px; }
+  #pin-submit { width: 100%; padding: 10px; background: #1a1a1a; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
+  #pin-submit:hover { background: #333; }
+  #content { display: none; }
 </style>
 </head>
 <body>
 
+<div id="pin-overlay">
+  <div id="pin-box">
+    <h2>🔒 Enter PIN</h2>
+    <p>This page is protected.</p>
+    <input id="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="····" autofocus />
+    <div id="pin-error"></div>
+    <button id="pin-submit">Unlock</button>
+  </div>
+</div>
+
+<div id="content">
 <a class="back" href="index.html">← Back</a>
 <h1>💰 Trip Budget</h1>
 <p class="subtitle">Orlando & Space Coast · July 1–8, 2026 · Dad & Son</p>
@@ -223,6 +244,31 @@
   💙 <strong>Points:</strong> Signia 165,000 pts (3 nights) — Airbnb covers Days 1–4, freeing ~60,000 pts for future travel.<br><br>
   🚗 <strong>Transport note:</strong> Return Hertz at Signia check-in Day 5. Signia shuttle goes to Disney parks and Disney Springs only — not Discovery Cove. Uber to Discovery Cove (~$25 round trip) and MCO airport (~$25) on Days 6 and 8.
 </div>
+
+</div> <!-- end #content -->
+
+<script>
+  const CORRECT = '8509';
+  const overlay = document.getElementById('pin-overlay');
+  const content = document.getElementById('content');
+  const input   = document.getElementById('pin-input');
+  const error   = document.getElementById('pin-error');
+  const btn     = document.getElementById('pin-submit');
+
+  function unlock() {
+    if (input.value === CORRECT) {
+      overlay.style.display = 'none';
+      content.style.display = 'block';
+    } else {
+      error.textContent = 'Incorrect PIN — try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
+</script>
 
 </body>
 </html>
